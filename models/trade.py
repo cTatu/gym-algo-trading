@@ -6,7 +6,7 @@ class TradeDirection(Enum):
     #SHORT = -1
 
 class Trade():
-    def __init__(self, entry_price : float, quantity : float, direction : TradeDirection, take_profit_pct : float, #balance : float, 
+    def __init__(self, entry_price : float, quantity : float, direction : TradeDirection, take_profit_pct : float,
                 commission_pct : float = 0.001, stop_loss_pct : float = None, leverage : int = 10) -> None:
 
         self._entry_price = entry_price
@@ -14,14 +14,13 @@ class Trade():
         self._take_profit_pct = abs(take_profit_pct)
         self._stop_loss_pct = -abs(stop_loss_pct) if stop_loss_pct is not None else -100
         self._leverage = int(np.clip(leverage, 1, 100))
-        #self._balance = balance
         self._quantity = quantity
         self._commission_pct = commission_pct
 
-        calc_price_from_pct = lambda pct: self._entry_price * (1 + ((pct / 100) * self._direction.value)) 
+        self.__calc_price_from_pct = lambda pct: self._entry_price * (1 + ((pct / 100) * self._direction.value)) 
 
-        self._take_profit_price = calc_price_from_pct(self._take_profit_pct)
-        self._stop_loss_price = calc_price_from_pct(self._stop_loss_pct)
+        self._take_profit_price = self.__calc_price_from_pct(self._take_profit_pct)
+        self._stop_loss_price = self.__calc_price_from_pct(self._stop_loss_pct)
 
         self._liq_price = self._liquidation_price()
 
@@ -52,8 +51,7 @@ class Trade():
 
 
     def _liquidation_price(self) -> float:
-        #quantity_percentage = self._quantity / self._balance
-        return 0.8528 * self._entry_price + 2.7081
+        return self.__calc_price_from_pct(-100)
 
     @property
     def profit_pct(self):

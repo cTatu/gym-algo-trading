@@ -39,7 +39,7 @@ class FuturesStockEnv(gym.Env, ABC):
         
         state, done = self.current_stock_df.next()
 
-        _, high, low, close = self.current_stock_df.current_ohlc
+        _, high, low, close = state[-1][:4]
 
         quantity = self.balance * self.order_size
         if self.current_trade is not None and self.current_trade.has_closed(high, low):

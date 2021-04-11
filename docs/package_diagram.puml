@@ -1,0 +1,17 @@
+@startuml
+title Package Diagram
+
+[OpenAI Gym]
+
+package "Gym Environment" {
+  [FuturesStockEnv]
+  [FuturesStockEnv] -up-> [OpenAI Gym]
+}
+
+package "Models" {
+  [StockDataFrame]
+  [Trade]
+  [FuturesStockEnv] -down-> [StockDataFrame]
+  [FuturesStockEnv] -down-> [Trade]
+}
+@enduml
