@@ -86,12 +86,12 @@ class TestTrade(unittest.TestCase):
         self.assertEqual(self.trade.profit, -500.49999999999994)
         self.assertEqual(self.trade.profit_pct, -0.5005)
 
-    def test_close_liquidation(self):
-        self.trade._stop_loss_price = 0
-        close = self.trade.has_closed(1000, 100)
-        self.assertEqual(close, True)
-        self.assertEqual(self.trade.profit, -1000)
-        self.assertEqual(self.trade.profit_pct, -1)
+    # def test_close_liquidation(self):
+    #     self.trade._stop_loss_price = 0
+    #     close = self.trade.has_closed(1000, 100)
+    #     self.assertEqual(close, True)
+    #     self.assertEqual(self.trade.profit, -1000)
+    #     self.assertEqual(self.trade.profit_pct, -1)
 
 if __name__ == '__main__':
     unittest.main()

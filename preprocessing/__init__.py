@@ -6,7 +6,7 @@ class Preprocessor(metaclass=ABCMeta):
     def process(self, df : pd.DataFrame) -> pd.DataFrame:
         new_df = self._add_change(df.copy(deep=False)).dropna()
         if self.prefix is not None:
-            return self.__add_prefix_cols(old_df=df, new_df=new_df)
+            new_df = self.__add_prefix_cols(old_df=df, new_df=new_df)
         return new_df
 
     def __add_prefix_cols(self, old_df : pd.DataFrame, new_df : pd.DataFrame) -> pd.DataFrame:

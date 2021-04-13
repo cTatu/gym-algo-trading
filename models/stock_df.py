@@ -1,28 +1,27 @@
-from typing import List
+from preprocessing import Preprocessor
+from typing import Iterable, List
 import pandas as pd
 from glob import glob
+from utils.dataset_loader import DatasetLoader
 import re
 
 class StockDataFrame():
-    def __init__(self, df : pd.DataFrame, window_size : int = 2) -> None:
+    def __init__(self, df : pd.DataFrame, window_size : int = 2, preprocessors : Iterable[Preprocessor] = []) -> None:
         self.df = df
         self.window_size = window_size
-        self.current_index = window_size
+        self.current_index = window_size + 1
+        
+        for p in preprocessors:
+            self.df = p.process(self.df)
+
+        self.df_array = self.df.values
 
     @staticmethod
-    def load_all_from_folder(folder_path) -> list:
-        all_files : List[str] = glob(f'{folder_path}/*')
+    def load_all_from_folder(folder_path, window_size : int = 2, preprocessors : Iterable[Preprocessor] = []) -> list:
+        all_filenames : List[str] = glob(f'{folder_path}/*')
 
-        dfs : List[StockDataFrame] = []
-        for file in all_files:
-            if file.endswith('.h5'):
-                matches = re.findall(r'[\/|\\]([a-zA-Z]+)_', file)
-                if matches == []:
-                    print(f'No Key found for dataset "{file}"')
-                else:
-                    dfs.append(StockDataFrame(pd.read_hdf(file, key=matches[-1])))
-            elif file.endswith('.csv'):
-                dfs.append(StockDataFrame(pd.read_csv(file, index_col=0)))
+        dfs = DatasetLoader.load_dfs([all_filenames[0]])
+        dfs : List[StockDataFrame] = [StockDataFrame(df, window_size, preprocessors) for df in dfs]
 
         return dfs
 
@@ -40,8 +39,9 @@ class StockDataFrame():
         if self.current_index == len(self.df):
             end = True
 
-        state = self.df.iloc[self.current_index - self.window_size:self.current_index].values
+        state = self.df_array[self.current_index - self.window_size:self.current_index]
+        self.current_index += 1
         return state, end
 
     def reset(self):
-        self.current_index = self.window_size - 1
+        self.current_index = self.window_size + 1

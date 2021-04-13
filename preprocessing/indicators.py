@@ -23,10 +23,10 @@ class IndicatorsPreprocessor(Preprocessor):
     def prefix(self) -> str:
         return 'indicator'
 
-    def sma(self, timeperiod : int, source : PriceSource = PriceSource.CLOSE):
-        self.columns_changes['SMA'] = lambda df: talib.SMA(df[source.value], timeperiod)
+    def sma(self, timeperiod : int, name : str = 'SMA', source : PriceSource = PriceSource.CLOSE):
+        self.columns_changes[name] = lambda df: talib.SMA(df[source.value], timeperiod)
         return self
 
-    def rsi(self, timeperiod : int, source : PriceSource = PriceSource.CLOSE):
-        self.columns_changes['RSI'] = lambda df: talib.RSI(df[source.value], timeperiod)
+    def rsi(self, timeperiod : int, name : str = 'RSI', source : PriceSource = PriceSource.CLOSE):
+        self.columns_changes[name] = lambda df: talib.RSI(df[source.value], timeperiod)
         return self
