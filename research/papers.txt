@@ -7,3 +7,5 @@ https://github.com/hfawaz/dl-4-tsc
 https://github.com/houshd/LSTM-FCN
 
 https://github.com/titu1994/LSTM-FCN
+
+https://towardsdatascience.com/farewell-rnns-welcome-tcns-dd76674707c8
